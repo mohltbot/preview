@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>A Balance app for your members | Preview</title>
+<meta name="theme-color" content="#f7f2e8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,600;0,700;0,800;1,700&amp;display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --ground:#f7f2e8; --paper:#fffdf8; --ink:#2f2d2c; --ink-2:#4a4644; --ink-3:#5f5a56;
+    --sage:#8c6a2c; --sage-deep:#3d3b3a; --sage-tint:#efe3c9;
+    --blue:#3d3b3a; --blue-hover:#2a2928; --line:#e6dcc6; --cta-text:#ffffff; --cta-shadow:rgba(61,59,58,.35);
+    --r:10px; --wrap:1120px; --gutter:clamp(16px,4vw,40px);
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font:400 17px/1.6 "Josefin Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;caret-color:var(--sage)}
+  ::selection{background:var(--sage-tint);color:var(--sage-deep)}
+  html{scrollbar-color:var(--line) var(--ground)}
+  h1,h2,h3{font-family:"Josefin Sans","Josefin Sans",system-ui,sans-serif;line-height:1.12;margin:0;letter-spacing:-.02em;text-wrap:balance}
+  p{margin:0;text-wrap:pretty}
+  a{color:var(--blue);text-underline-offset:3px;text-decoration-thickness:1px}
+  img{display:block;max-width:100%;height:auto}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gutter)}
+  .skip{position:absolute;left:var(--gutter);top:-60px;background:var(--ink);color:#fff;padding:10px 14px;border-radius:6px;z-index:20}
+  .skip:focus{top:12px}
+
+  /* nav */
+  .nav{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+  .nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:68px}
+  .nav img{height:40px;width:auto}
+  .nav-call{white-space:nowrap;flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;color:var(--ink);font-weight:600;text-decoration:none;font-size:15px}
+  .nav-call svg{width:18px;height:18px;color:var(--sage)}
+  .nav-call:hover{color:var(--sage-deep)}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 22px;border-radius:var(--r);font:600 16px/1 "Josefin Sans",system-ui,sans-serif;text-decoration:none;border:2px solid transparent;cursor:pointer;transition:transform .18s var(--ease),background-color .18s,box-shadow .18s,border-color .18s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(1px)}
+  .btn-main{background:var(--blue);color:var(--cta-text);box-shadow:0 6px 18px -8px var(--cta-shadow)}
+  .btn-main:hover{background:var(--blue-hover)}
+  .btn-line{background:transparent;color:var(--sage-deep);border-color:var(--sage)}
+  .btn-line:hover{background:var(--paper)}
+  .btn svg{width:18px;height:18px}
+
+  /* hero */
+  .hero{padding:clamp(40px,7vw,88px) 0 clamp(48px,7vw,96px)}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(32px,6vw,80px);align-items:center}
+  .hero h1{font-size:clamp(36px,5.4vw,64px);font-weight:800;color:var(--ink)}
+  .hero h1 em{font-style:italic;font-weight:700;color:var(--sage)}
+  .lede{font-size:clamp(18px,1.6vw,20px);color:var(--ink-2);margin:20px 0 28px;max-width:46ch}
+  .cta{display:flex;flex-wrap:wrap;gap:12px}
+  .facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin:32px 0 0;padding:20px 0 0;border-top:1px solid var(--line);list-style:none}
+  .facts li{font-size:15px;color:var(--ink-2)}
+  .facts b{display:block;font:700 22px/1.2 "Josefin Sans","Josefin Sans",system-ui,sans-serif;color:var(--sage-deep);letter-spacing:-.01em}
+  .portrait{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/5;background:var(--sage-tint);box-shadow:0 30px 60px -30px rgba(29,36,32,.45)}
+  .portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 25%;transition:transform .6s var(--ease)}
+  .portrait:hover img{transform:scale(1.025)}
+  .portrait figcaption{position:absolute;left:14px;bottom:14px;background:rgba(255,252,245,.94);padding:10px 14px;border-radius:8px;font-size:14px;color:var(--ink-2);line-height:1.35}
+  .portrait figcaption b{display:block;color:var(--ink);font:700 15px/1.3 "Josefin Sans","Josefin Sans",system-ui,sans-serif}
+
+  /* entrance: one authored moment, from a visible default */
+  @media (prefers-reduced-motion:no-preference){
+    .js .hero-copy>*{animation:rise .8s var(--ease) both}
+    .js .hero-copy>*:nth-child(2){animation-delay:.06s}
+    .js .hero-copy>*:nth-child(3){animation-delay:.12s}
+    .js .hero-copy>*:nth-child(4){animation-delay:.18s}
+    .js .portrait{animation:reveal 1.1s var(--ease) both .1s}
+  }
+  @keyframes rise{from{opacity:.001;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes reveal{from{clip-path:inset(12% 12% 12% 12% round 16px);opacity:.4}to{clip-path:inset(0 0 0 0 round 16px);opacity:1}}
+
+  section{scroll-margin-top:80px}
+  .sec{padding:clamp(56px,8vw,104px) 0}
+  .sec h2{font-size:clamp(28px,3.4vw,40px);font-weight:700;color:var(--ink)}
+  .sec-head{display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(24px,5vw,72px)}
+  .sec-head .intro{color:var(--ink-2);margin-top:14px;max-width:34ch}
+
+  /* questions */
+  .qs{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .qs .intro a{font-weight:600}
+  details{border-bottom:1px solid var(--line)}
+  details:first-of-type{border-top:1px solid var(--line)}
+  summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:64px;padding:14px 0;font:600 18px/1.35 "Josefin Sans","Josefin Sans",system-ui,sans-serif;color:var(--ink);transition:color .15s}
+  summary::-webkit-details-marker{display:none}
+  summary:hover{color:var(--sage-deep)}
+  summary svg{flex:0 0 22px;width:22px;height:22px;color:var(--sage);transition:transform .3s var(--ease)}
+  details[open] summary svg{transform:rotate(180deg)}
+  .a{padding:0 0 24px;color:var(--ink-2);max-width:62ch}
+  .a p+p,.a p+ul,.a ul+p{margin-top:12px}
+  .a ul{margin:0;padding-left:20px}
+  .a li{margin:4px 0}
+  .a li::marker{color:var(--sage)}
+  .price{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 14px}
+  .price div{flex:1 1 180px;background:var(--ground);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+  .price b{display:block;font:800 28px/1.1 "Josefin Sans","Josefin Sans",system-ui,sans-serif;color:var(--sage-deep);font-variant-numeric:tabular-nums}
+  .price b small{font-size:15px;font-weight:600;color:var(--ink-3)}
+  .price span{font-size:15px;color:var(--ink-3)}
+
+  /* office */
+  .office .wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,48px);align-items:end}
+  .office h2{margin-bottom:16px}
+  .office .addr{font:700 clamp(22px,2.6vw,30px)/1.25 "Josefin Sans","Josefin Sans",system-ui,sans-serif;color:var(--sage-deep);letter-spacing:-.01em;margin:8px 0 12px}
+  .office p{color:var(--ink-2);max-width:44ch}
+  .office .dir{display:inline-flex;align-items:center;gap:6px;margin-top:18px;min-height:44px;font-weight:600}
+  .rooms{display:grid;grid-template-columns:1.3fr 1fr;gap:12px}
+  .rooms figure{margin:0;border-radius:12px;overflow:hidden;background:var(--sage-tint)}
+  .rooms img{width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;transition:transform .5s var(--ease)}
+  .rooms figure:hover img{transform:scale(1.03)}
+  .rooms figure:last-child img{aspect-ratio:3/4}
+
+  /* steps: the order carries information, so they are numbered */
+  .join{background:var(--sage-deep);color:#f4f1e6}
+  .join h2{color:#fff}
+  .steps{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:0;margin:40px 0 36px;padding:0;list-style:none;counter-reset:s;border-top:1px solid rgba(255,255,255,.22)}
+  .steps li{padding:24px 24px 0 0;position:relative}
+  .steps li::before{counter-increment:s;content:counter(s);display:block;font:800 15px/1 "Josefin Sans","Josefin Sans",system-ui,sans-serif;color:#cfd8bd;margin-bottom:14px}
+  .steps b{display:block;font:700 19px/1.3 "Josefin Sans","Josefin Sans",system-ui,sans-serif;color:#fff;margin-bottom:6px}
+  .steps span{color:#dfe4d2;font-size:16px}
+  .join .btn-main{background:#fff;color:var(--sage-deep);box-shadow:none}
+  .join .btn-main:hover{background:var(--ground)}
+
+  /* ask */
+  .ask .wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(24px,5vw,72px)}
+  .ask .intro{color:var(--ink-2);margin-top:14px;max-width:36ch}
+  form{display:grid;gap:16px}
+  .row{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+  label{display:block;font-weight:600;font-size:15px;margin-bottom:6px;color:var(--ink)}
+  input,textarea{width:100%;font:16px/1.4 "Josefin Sans",system-ui,sans-serif;padding:12px 14px;min-height:48px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);color:var(--ink);transition:border-color .15s,box-shadow .15s}
+  input:hover,textarea:hover{border-color:var(--sage)}
+  input:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--cta-shadow)}
+  textarea{min-height:130px;resize:vertical}
+  .err{display:none;color:#a33a1f;font-size:14px;margin-top:6px}
+  .bad input,.bad textarea{border-color:#a33a1f}
+  .bad .err{display:block}
+  .fine{font-size:14px;color:var(--ink-3)}
+  .sent{display:none;background:var(--sage-tint);border-radius:var(--r);padding:16px 18px;color:var(--sage-deep)}
+  .sent.on{display:block}
+
+  footer{border-top:1px solid var(--line);padding:32px 0 40px;font-size:15px;color:var(--ink-3)}
+  footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 32px}
+  footer a{color:var(--ink-2)}
+  .preview{flex-basis:100%;font-size:13px;padding-top:16px;border-top:1px solid var(--line)}
+
+  @media (max-width:900px){
+    .hero .wrap,.sec-head,.office .wrap,.office.solo .wrap,.ask .wrap{grid-template-columns:1fr}
+    .portrait{max-width:440px;aspect-ratio:1/1}
+    .steps{grid-template-columns:1fr 1fr}
+    .steps li{padding-bottom:20px}
+  }
+  @media (max-width:560px){
+    body{font-size:16px}
+    .nav-call span{display:none}
+    .cta .btn{width:100%}
+    .row,.steps{grid-template-columns:1fr}
+    .rooms{grid-template-columns:1fr}
+    .rooms figure:last-child img{aspect-ratio:4/3}
+    .portrait{aspect-ratio:4/5;max-width:none}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+
+  .hero.solo .wrap{grid-template-columns:1fr}
+  .hero.solo .hero-copy{max-width:780px}
+  .office.solo .wrap{grid-template-columns:1fr 1.4fr;align-items:start;gap:clamp(24px,5vw,72px)}
+  .office.solo .addr{margin-top:0}
+  .office .map{border-radius:12px;overflow:hidden;background:var(--sage-tint)}
+
+  figure.portrait{margin:0}
+  .nav a:first-child{min-width:0;flex:0 1 auto}
+  .nav img{max-width:min(240px,52vw);object-fit:contain;object-position:left center}
+  @media (max-width:400px){.nav-call{font-size:14px;gap:6px}}
+  .nav .wrap>a:first-child{text-decoration:none}
+  .app-hero{padding:clamp(40px,7vw,80px) 0 8px}
+  .app-hero h1{font-size:clamp(34px,4.8vw,58px);font-weight:800;max-width:18ch}
+  .app-hero h1 em{font-style:italic;color:var(--sage)}
+  .app-hero .lede{max-width:56ch}
+  .shots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2.4vw,32px);padding:clamp(24px,4vw,48px) 0 clamp(56px,8vw,96px)}
+  .shot figcaption{margin-top:16px}
+  .shot figcaption b{display:block;font:700 17px/1.3 &#34;Josefin Sans&#34;,&#34;Josefin Sans&#34;,system-ui,sans-serif;color:var(--ink)}
+  .shot figcaption span{display:block;color:var(--ink-2);font-size:15px;margin-top:4px}
+  .shot{margin:0}
+  .phone{position:relative;aspect-ratio:9/19;border-radius:34px;background:#111;padding:9px;box-shadow:0 30px 60px -30px rgba(0,0,0,.45)}
+  .scr{height:100%;border-radius:26px;background:var(--paper);overflow:hidden;display:flex;flex-direction:column;font-size:12.5px;line-height:1.4;color:var(--ink)}
+  .sb{display:flex;justify-content:space-between;padding:10px 18px 4px;font:600 11px/1 &#34;Josefin Sans&#34;,system-ui,sans-serif;color:var(--ink)}
+  .top{display:flex;align-items:center;gap:8px;padding:8px 14px 10px;border-bottom:1px solid var(--line)}
+  .top img{height:22px;width:auto;max-width:110px;object-fit:contain}
+  .top b{font:700 14px/1.2 &#34;Josefin Sans&#34;,&#34;Josefin Sans&#34;,system-ui,sans-serif}
+  .body{flex:1;padding:12px 12px 0;display:flex;flex-direction:column;gap:9px;overflow:hidden}
+  .card{background:var(--ground);border:1px solid var(--line);border-radius:14px;padding:11px 12px}
+  .card small{display:block;color:var(--ink-3);font-size:10.5px;text-transform:none;margin-bottom:3px}
+  .card b{display:block;font:700 13.5px/1.3 &#34;Josefin Sans&#34;,&#34;Josefin Sans&#34;,system-ui,sans-serif}
+  .pill{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--blue);color:var(--cta-text);border-radius:12px;padding:10px;font-weight:600;font-size:12.5px}
+  .pill.alt{background:var(--sage-tint);color:var(--sage-deep)}
+  .greet{font:700 18px/1.2 &#34;Josefin Sans&#34;,&#34;Josefin Sans&#34;,system-ui,sans-serif;margin:2px 2px 2px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .tabbar{display:flex;justify-content:space-around;padding:9px 6px 14px;border-top:1px solid var(--line);font-size:9.5px;color:var(--ink-3)}
+  .tabbar span.on{color:var(--sage-deep);font-weight:700}
+  .msg{max-width:84%;padding:8px 10px;border-radius:14px;font-size:12px}
+  .msg.me{align-self:flex-end;background:var(--blue);color:var(--cta-text);border-bottom-right-radius:4px}
+  .msg.dr{align-self:flex-start;background:var(--ground);border:1px solid var(--line);border-bottom-left-radius:4px}
+  .who{display:flex;align-items:center;gap:8px}
+  .av{width:30px;height:30px;border-radius:50%;object-fit:cover;background:var(--sage-tint);display:grid;place-items:center;font-weight:700;color:var(--sage-deep);font-size:12px;flex:0 0 30px}
+  .note{align-self:center;font-size:10.5px;color:var(--ink-3);background:var(--sage-tint);border-radius:99px;padding:4px 10px}
+  .days{display:flex;gap:6px}
+  .days div{flex:1;text-align:center;border:1px solid var(--line);border-radius:10px;padding:6px 0;font-size:10.5px;color:var(--ink-2)}
+  .days div b{display:block;font-size:13px;color:var(--ink)}
+  .days div.on{background:var(--sage-deep);border-color:var(--sage-deep);color:#fff}.days div.on b{color:#fff}
+  .slots{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .slots div{border:1px solid var(--line);border-radius:9px;padding:7px 0;text-align:center;font-size:11.5px}
+  .slots div.on{border:2px solid var(--blue);font-weight:700}
+  .types{display:flex;flex-direction:column;gap:6px}
+  .types div{display:flex;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px}
+  .types div.on{border:2px solid var(--blue)}
+  .kv{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:12px}
+  .kv:last-child{border-bottom:0}
+  .kv span{color:var(--ink-3)}
+  .sec.more{background:var(--paper);border-top:1px solid var(--line)}
+  .more .grid{display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(24px,5vw,72px)}
+  .more ul{margin:0;padding-left:20px;color:var(--ink-2)}.more li{margin:8px 0}.more li::marker{color:var(--sage)}
+  .more h3{font:700 19px/1.3 &#34;Josefin Sans&#34;,&#34;Josefin Sans&#34;,system-ui,sans-serif;margin:28px 0 6px;color:var(--ink)}
+  .more h3:first-child{margin-top:0}
+  .offer{margin-top:28px;background:var(--sage-tint);border-left:4px solid var(--sage-deep);border-radius:8px;padding:18px 20px}
+  .offer b{display:block;font:700 20px/1.3 &#34;Josefin Sans&#34;,&#34;Josefin Sans&#34;,system-ui,sans-serif;color:var(--sage-deep);margin-bottom:6px}
+  .sample{font-size:13px;color:var(--ink-3);margin-top:6px}
+  @media (max-width:1000px){.shots{grid-template-columns:repeat(2,minmax(0,1fr))}.more .grid{grid-template-columns:1fr}}
+  @media (max-width:560px){.shots{grid-template-columns:minmax(0,300px);justify-content:center}}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a href="https://www.balanceintegratedhealth.com/" aria-label="Balance home"><img src="../logo.png" alt="Balance Integrated Health" width="193" height="40"></a>
+    <span style="font-size:14px;color:var(--ink-3)">Preview for Dr. Marzolf</span>
+  </div>
+</header>
+<main>
+<section class="app-hero">
+  <div class="wrap">
+    <h1>A <em>Balance</em> app for your members</h1>
+    <p class="lede">Your members message you, book visits and manage their membership in one app with your name and colors on it. Billing and records can stay in SigmaMD.</p>
+  </div>
+</section>
+<section>
+  <div class="wrap shots">
+    <figure class="shot">
+      <div class="phone"><div class="scr">
+        <div class="sb"><span>9:41</span><span>●●●</span></div>
+        <div class="top"><img src="../logo.png" alt=""></div>
+        <div class="body">
+          <div class="greet">Hi Maria</div>
+          <div class="pill">Message Dr. Marzolf</div>
+          <div class="card"><small>Next visit</small><b>Thu, Dec 4 at 10:30 AM</b>Office visit</div>
+          <div class="row2"><div class="pill alt">Book a visit</div><div class="pill alt">Lab results</div></div>
+          <div class="card"><small>Membership</small><b>Balance 2.1 · $125/month</b>Active</div>
+        </div>
+        <div class="tabbar"><span class="on">Home</span><span>Messages</span><span>Visits</span><span>Account</span></div>
+      </div></div>
+      <figcaption><b>Home</b><span>Everything a member needs, under your name.</span></figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="phone"><div class="scr">
+        <div class="sb"><span>9:41</span><span>●●●</span></div>
+        <div class="top who"><img class="av" src="../img/avatar.webp" alt="" style="height:30px;max-width:30px"><b>Dr. Marzolf</b></div>
+        <div class="body">
+          <div class="msg me">Hi Dr. Marzolf, I&#39;ve had a sore throat and a fever since last night. Could I come in today?</div>
+          <div class="msg dr">Sorry you&#39;re feeling rough. I can see you at 11:30 today. Does that work?</div>
+          <div class="msg me">Yes, thank you!</div>
+          <div class="note">Visit booked for today, 11:30 AM</div>
+        </div>
+        <div class="tabbar"><span>Home</span><span class="on">Messages</span><span>Visits</span><span>Account</span></div>
+      </div></div>
+      <figcaption><b>Messages</b><span>Members reach you in the app instead of your personal phone.</span></figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="phone"><div class="scr">
+        <div class="sb"><span>9:41</span><span>●●●</span></div>
+        <div class="top"><b>Book a visit</b></div>
+        <div class="body">
+          <div class="types"><div class="on"><span>Office visit</span></div><div><span>Video visit</span></div><div><span>Phone call</span></div></div>
+          <div class="days"><div><b>2</b>Tue</div><div class="on"><b>3</b>Wed</div><div><b>4</b>Thu</div><div><b>5</b>Fri</div></div>
+          <div class="slots"><div>9:00</div><div class="on">11:30</div><div>1:15</div><div>2:00</div><div>3:45</div><div>4:30</div></div>
+          <div class="pill">Book Wed 11:30 AM</div>
+        </div>
+        <div class="tabbar"><span>Home</span><span>Messages</span><span class="on">Visits</span><span>Account</span></div>
+      </div></div>
+      <figcaption><b>Booking</b><span>Members pick a time themselves.</span></figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="phone"><div class="scr">
+        <div class="sb"><span>9:41</span><span>●●●</span></div>
+        <div class="top"><b>Membership</b></div>
+        <div class="body">
+          <div class="card"><small>Plan</small><b>Balance 2.1</b>$125/month</div>
+          <div class="card"><div class="kv"><span>Next payment</span>Dec 1</div><div class="kv"><span>Card</span>•••• 4242</div><div class="kv"><span>Receipts</span>Download</div></div>
+          <div class="pill alt">Add a family member</div>
+        </div>
+        <div class="tabbar"><span>Home</span><span>Messages</span><span>Visits</span><span class="on">Account</span></div>
+      </div></div>
+      <figcaption><b>Membership</b><span>Plan, payments and family in one place.</span></figcaption>
+    </figure>
+  </div>
+  <div class="wrap"><p class="sample">Sample screens. Names, times and messages are made up; prices and visit types come from balanceintegratedhealth.com.</p></div>
+</section>
+<section class="sec more">
+  <div class="wrap grid">
+    <div><h2>What we'd build</h2></div>
+    <div>
+      <h3>Included</h3>
+      <ul><li>An iPhone and Android app with your name, logo and colors</li><li>Messaging between members and you, with notifications</li><li>Visit booking that members do themselves</li><li>Membership, payments and family members, kept in sync with SigmaMD</li><li>Setup, the app store listings and 30 days of changes after launch</li></ul>
+      <h3>What it doesn't do</h3>
+      <ul><li>It doesn&#39;t replace SigmaMD. Billing and records stay there.</li><li>Nothing changes for your members until you approve the app.</li></ul>
+      <div class="offer"><b>The mockup is yours to keep.</b> If you&#39;d like it built, reply and we&#39;ll send the scope and a price. No obligation.</div>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap">
+    <p><strong>Built by MOSI Consulting for Dr. Marzolf</strong><br>Mohammed Wasif, CPA · rayedwasif@gmail.com</p>
+    <p class="preview">Preview only. Not affiliated with Balance Integrated Health. Brand, prices and visit types come from balanceintegratedhealth.com as of November 2026.</p>
+  </div>
+</footer>
+</body>
+</html>
