@@ -206,6 +206,42 @@ dialog::backdrop{background:rgba(24,41,68,.42)}
   .dlg{padding:20px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* Comment layer, for Dr. Jackson's feedback on the preview */
+.cm-fab{position:fixed;right:20px;bottom:20px;z-index:30;display:flex;gap:8px}
+.cm-fab .btn{box-shadow:0 12px 30px -10px rgba(24,41,68,.55)}
+.cm-fab .btn-gold{border-color:var(--gold-2)}
+.cm-n{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:99px;background:var(--gold);color:var(--navy);font-size:12.5px;font-weight:700}
+.cm-bar{position:fixed;left:0;right:0;top:0;z-index:31;background:var(--gold);color:var(--navy);box-shadow:0 6px 20px -8px rgba(24,41,68,.45)}
+.cm-bar .wrap{display:flex;align-items:center;gap:10px;min-height:56px;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
+.cm-bar p{margin:0;font-weight:600;flex:1;min-width:200px}
+.cm-bar .btn-line{background:#fffaf0;border-color:#e2bd6d}
+body.cm-on main *,body.cm-on .bar *,body.cm-on .preview *{cursor:crosshair}
+body.cm-on{padding-top:56px}
+.cm-hl{outline:2px dashed var(--gold-ink)!important;outline-offset:3px!important;border-radius:6px}
+.cm-pop{position:fixed;z-index:33;width:min(340px,calc(100vw - 32px));background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 18px 44px -14px rgba(24,41,68,.45);padding:14px;display:grid;gap:10px}
+.cm-ui[hidden],.cm-ui [hidden]{display:none!important}
+.cm-pop .on{margin:0;font-size:13px;color:var(--ink-3)}
+.cm-pop .on b{color:var(--ink);font-weight:600}
+.cm-pop textarea,.cm-sheet textarea{width:100%;min-height:96px;border:1px solid var(--line);border-radius:var(--r-s);padding:10px 12px;font:inherit;background:#fff;resize:vertical}
+.cm-row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.cm-pin{position:absolute;z-index:29;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50% 50% 50% 4px;background:var(--navy);color:var(--gold);font-size:12.5px;font-weight:700;display:grid;place-items:center;border:2px solid var(--gold);box-shadow:0 4px 10px -2px rgba(24,41,68,.4);cursor:pointer;padding:0}
+.cm-sheet{position:fixed;right:20px;bottom:84px;z-index:32;width:min(400px,calc(100vw - 32px));max-height:min(70vh,560px);overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 18px 44px -14px rgba(24,41,68,.45);padding:18px;display:grid;gap:12px}
+.cm-sheet h2{font-size:20px}
+.cm-sheet p{margin:0;color:var(--ink-2);font-size:14px}
+.cm-sheet ol{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.cm-sheet li{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:10px;align-items:start;padding:10px;border:1px solid var(--line-2);border-radius:var(--r-s);background:#fff}
+.cm-sheet li .cm-pin{position:static;margin:0;cursor:default}
+.cm-sheet li small{display:block;color:var(--ink-3);font-size:12.5px}
+.cm-sheet li span{overflow-wrap:anywhere}
+.cm-x{min-height:36px;min-width:36px;border:0;background:none;color:var(--ink-3);border-radius:6px;cursor:pointer;font-size:18px;line-height:1}
+.cm-x:hover{background:var(--line-2);color:var(--red)}
+@media (max-width:640px){
+  .cm-fab{right:16px;bottom:16px}
+  .cm-sheet{right:16px;bottom:76px}
+  .cm-bar p{font-size:14px}
+}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -539,6 +575,104 @@ document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if
 $('resetBtn').addEventListener('click',()=>{people=sample();save();render();toast('Back to the sample list.')});
 
 render();
+})();
+</script>
+<!-- Comment layer: lets Dr. Jackson point at any part of the preview and send notes to us -->
+<div class="cm-ui cm-bar" id="cmBar" hidden>
+  <div class="wrap">
+    <p>Click the part you want to change, then type your comment.</p>
+    <button type="button" class="btn btn-line" id="cmGeneral">General comment</button>
+    <button type="button" class="btn btn-navy" id="cmDone">Done</button>
+  </div>
+</div>
+<div class="cm-ui cm-pop" id="cmPop" role="dialog" aria-labelledby="cmOn" hidden>
+  <p class="on" id="cmOn"></p>
+  <label class="sr" for="cmText">Your comment</label>
+  <textarea id="cmText" placeholder="What should we change?"></textarea>
+  <div class="cm-row">
+    <button type="button" class="btn btn-quiet" id="cmCancel">Cancel</button>
+    <button type="button" class="btn btn-navy" id="cmSave">Save comment</button>
+  </div>
+</div>
+<div class="cm-ui cm-sheet" id="cmSheet" role="dialog" aria-labelledby="cmSheetH" hidden>
+  <h2 id="cmSheetH">Your comments</h2>
+  <p>Send them when you're done and we'll make the changes.</p>
+  <ol id="cmList"></ol>
+  <div class="cm-row">
+    <button type="button" class="btn btn-line" id="cmCopy">Copy</button>
+    <button type="button" class="btn btn-navy" id="cmSend">Email them to us</button>
+  </div>
+</div>
+<div class="cm-ui cm-fab">
+  <button type="button" class="btn btn-gold" id="cmList Btn" hidden></button>
+  <button type="button" class="btn btn-navy" id="cmFab" aria-pressed="false">
+    <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12z"/></svg><span id="cmFabT">Comment</span>
+  </button>
+</div>
+<script>
+(()=>{
+const K='become-comments-v1',$=id=>document.getElementById(id);
+const TO=['rayedwasif','gmail.com'].join('@');
+let list=[];try{list=JSON.parse(localStorage.getItem(K))||[]}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(list))}catch(e){}};
+let on=false,target=null,hl=null,pinLayer=document.createElement('div');
+document.body.appendChild(pinLayer);
+const listBtn=$('cmList Btn');listBtn.id='cmListBtn';
+const ui=el=>!!el.closest('.cm-ui,.cm-pin');
+const clean=s=>(s||'').replace(/\s+/g,' ').trim();
+function path(el){const p=[];while(el&&el!==document.body){if(el.id){p.unshift('#'+CSS.escape(el.id));break}let i=1,s=el;while((s=s.previousElementSibling))if(s.tagName===el.tagName)i++;p.unshift(el.tagName.toLowerCase()+':nth-of-type('+i+')');el=el.parentElement}return p.join('>')}
+function label(el){
+  let t=clean(el.getAttribute('aria-label')||el.innerText||el.alt||'');
+  if(!t){const b=el.closest('button,a,li,article,section');t=b?clean(b.innerText):''}
+  if(t.length>70)t=t.slice(0,67)+'...';
+  const sec=el.closest('section,aside,header,.preview');const h=sec&&sec.querySelector('h1,h2');
+  const where=sec&&sec.matches('header')?'Top bar':sec&&sec.matches('.preview')?'Preview banner':h?clean(h.innerText):'';
+  return {what:t,where};
+}
+function setMode(v){on=v;document.body.classList.toggle('cm-on',v);$('cmBar').hidden=!v;$('cmFab').setAttribute('aria-pressed',v);$('cmFabT').textContent=v?'Commenting':'Comment';if(!v){unhl();closePop()}else{$('cmSheet').hidden=true}pins()}
+function unhl(){if(hl){hl.classList.remove('cm-hl');hl=null}}
+function closePop(){$('cmPop').hidden=true;target=null}
+function openPop(el,x,y){
+  const r=el?el.getBoundingClientRect():null;
+  target=el?{path:path(el),rx:r.width?(x-r.left)/r.width:0,ry:r.height?(y-r.top)/r.height:0,...label(el)}:{general:true,what:'',where:''};
+  $('cmOn').innerHTML=el?'On <b></b>'+(target.where?' in '+target.where.replace(/</g,''):''):'<b>General comment</b>';
+  if(el)$('cmOn').querySelector('b').textContent='"'+(target.what||'this')+'"';
+  const p=$('cmPop');p.hidden=false;$('cmText').value='';
+  const w=p.offsetWidth,h=p.offsetHeight,vw=innerWidth,vh=innerHeight;
+  let L=el?x+12:(vw-w)/2,T=el?y+12:(vh-h)/2;
+  L=Math.max(16,Math.min(L,vw-w-16));if(T+h>vh-16)T=Math.max(72,y-h-12);
+  p.style.left=L+'px';p.style.top=T+'px';$('cmText').focus();
+}
+document.addEventListener('mouseover',e=>{if(!on||$('cmPop').hidden===false||ui(e.target))return;unhl();hl=e.target;if(hl!==document.body&&hl!==document.documentElement)hl.classList.add('cm-hl')},true);
+document.addEventListener('click',e=>{if(!on||ui(e.target))return;e.preventDefault();e.stopPropagation();if(!$('cmPop').hidden){closePop();return}unhl();openPop(e.target,e.clientX,e.clientY)},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&on){if(!$('cmPop').hidden)closePop();else setMode(false)}});
+$('cmFab').addEventListener('click',()=>setMode(!on));
+$('cmDone').addEventListener('click',()=>{setMode(false);if(list.length)$('cmSheet').hidden=false});
+$('cmGeneral').addEventListener('click',()=>openPop(null));
+$('cmCancel').addEventListener('click',closePop);
+$('cmSave').addEventListener('click',()=>{const t=clean($('cmText').value);if(!t){$('cmText').focus();return}list.push({...target,text:t,at:new Date().toISOString()});save();closePop();draw();if(typeof toast==='function')toast('Comment saved. Click something else or press Done.')});
+$('cmText').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))$('cmSave').click()});
+listBtn.addEventListener('click',()=>{setMode(false);$('cmSheet').hidden=!$('cmSheet').hidden});
+function body(){return list.map((c,i)=>(i+1)+'. '+(c.general?'General':(c.where?c.where+', ':'')+'"'+c.what+'"')+'\n'+c.text).join('\n\n')+'\n\n(Sent from the tracker preview, '+innerWidth+'px wide)'}
+$('cmSend').addEventListener('click',()=>{location.href='mailto:'+TO+'?subject='+encodeURIComponent('Tracker comments from Dr. Jackson')+'&body='+encodeURIComponent(body())});
+$('cmCopy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(body());if(typeof toast==='function')toast('Copied. Paste it into a reply to us.')}catch(e){}});
+$('cmList').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;list.splice(+b.dataset.del,1);save();draw();if(!list.length)$('cmSheet').hidden=true});
+function draw(){
+  listBtn.hidden=!list.length;listBtn.innerHTML='<span class="cm-n">'+list.length+'</span><span>'+(list.length===1?'comment':'comments')+'</span>';
+  const ol=$('cmList');ol.innerHTML='';
+  list.forEach((c,i)=>{const li=document.createElement('li');li.innerHTML='<span class="cm-pin"></span><span><small></small><span></span></span><button type="button" class="cm-x" aria-label="Delete comment">&times;</button>';
+    li.querySelector('.cm-pin').textContent=i+1;li.querySelector('small').textContent=c.general?'General':(c.where?c.where+', ':'')+'"'+c.what+'"';li.querySelector('span>span').textContent=c.text;li.querySelector('.cm-x').dataset.del=i;ol.appendChild(li)});
+  pins();
+}
+function pins(){
+  pinLayer.innerHTML='';
+  list.forEach((c,i)=>{if(c.general)return;let el;try{el=document.querySelector(c.path)}catch(e){}if(!el)return;const r=el.getBoundingClientRect();if(!r.width&&!r.height)return;
+    const b=document.createElement('button');b.type='button';b.className='cm-pin';b.textContent=i+1;b.title=c.text;b.setAttribute('aria-label','Comment '+(i+1)+': '+c.text);
+    b.style.left=(r.left+scrollX+c.rx*r.width)+'px';b.style.top=(r.top+scrollY+c.ry*r.height)+'px';b.addEventListener('click',()=>{$('cmSheet').hidden=false});pinLayer.appendChild(b)});
+}
+let rt;const later=()=>{clearTimeout(rt);rt=setTimeout(pins,120)};
+addEventListener('resize',later);new MutationObserver(later).observe(document.querySelector('main'),{childList:true,subtree:true});
+draw();
 })();
 </script>
 </body>
