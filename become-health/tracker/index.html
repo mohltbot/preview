@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meet and Greet Follow-ups | Become Health</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#182944; --navy-2:#2b3f61; --ground:#fff8ed; --card:#ffffff;
+  --gold:#f6d598; --gold-deep:#8a6416; --sky:#e3eef2; --sky-ink:#1f4a5c;
+  --ink:#182944; --ink-2:#4a5a72; --ink-3:#5d6b80; --line:#eadfcb; --line-2:#f2e9da;
+  --red:#a23b2a; --red-bg:#fbe9e4; --green:#2f6b45; --green-bg:#e5f1e8;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 15px/1.5 "Hanken Grotesk",system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* top */
+.top{background:var(--card);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;min-height:72px}
+.top img{height:34px;width:auto;display:block}
+.top .title{font-family:Marcellus,serif;font-size:17px;color:var(--ink-2);padding-left:16px;border-left:1px solid var(--line)}
+.top .spacer{flex:1}
+.btn{appearance:none;border:1px solid transparent;border-radius:8px;padding:9px 14px;font-weight:600;font-size:14px;cursor:pointer;line-height:1.2;display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{background:var(--navy-2)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn-ghost:hover{background:var(--line-2)}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{background:#f0c979}
+.btn:focus-visible,.tab:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+
+.note{background:var(--sky);color:var(--sky-ink);font-size:13.5px}
+.note .wrap{display:flex;gap:12px;align-items:center;justify-content:space-between;padding-top:9px;padding-bottom:9px;flex-wrap:wrap}
+.note button{background:none;border:0;text-decoration:underline;cursor:pointer;color:inherit;font-size:13.5px;padding:0}
+
+main{padding:28px 0 56px}
+h1{font-family:Marcellus,serif;font-weight:400;font-size:30px;line-height:1.15;margin:0 0 4px}
+.sub{color:var(--ink-3);margin:0 0 22px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:30px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.stat b{display:block;font-family:Marcellus,serif;font-weight:400;font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{color:var(--ink-3);font-size:13px}
+
+h2{font-family:Marcellus,serif;font-weight:400;font-size:21px;margin:0}
+.sec-head{display:flex;align-items:baseline;gap:10px;margin:0 0 12px}
+.count{font-size:13px;color:var(--ink-3)}
+
+/* due cards */
+.due{display:grid;gap:10px;margin-bottom:34px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:10px 16px;align-items:center}
+.card .who{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card .name{font-weight:600;font-size:16px}
+.card .meta{color:var(--ink-3);font-size:13.5px;margin-top:2px}
+.card .wait{margin-top:6px;font-size:14px}
+.card .wait em{font-style:normal;color:var(--ink-3)}
+.card .acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:var(--r);padding:18px;color:var(--ink-3);text-align:center}
+
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.p-ready{background:var(--gold);color:var(--navy)}
+.p-thinking{background:var(--sky);color:var(--sky-ink)}
+.p-unsure{background:#efe9df;color:var(--ink-2)}
+.p-over{background:var(--red-bg);color:var(--red)}
+.p-today{background:#fdf0d4;color:var(--gold-deep)}
+.p-joined{background:var(--green-bg);color:var(--green)}
+.p-notnow{background:#efe9df;color:var(--ink-3)}
+
+/* table */
+.tabs{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;color:var(--ink-2)}
+.tab[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.table{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line-2);vertical-align:top;font-size:14px}
+th{font-size:12px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;background:#fffcf6}
+tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:#fffaf1}
+td .n{font-weight:600}
+td .e{color:var(--ink-3);font-size:13px}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+footer{color:var(--ink-3);font-size:13px;border-top:1px solid var(--line);padding:18px 0 28px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* dialog */
+dialog{border:0;border-radius:14px;padding:0;width:min(520px,calc(100vw - 32px));color:var(--ink);background:var(--card);box-shadow:0 20px 60px rgba(24,41,68,.25)}
+dialog::backdrop{background:rgba(24,41,68,.35)}
+.dlg{padding:22px}
+.dlg h3{font-family:Marcellus,serif;font-weight:400;font-size:22px;margin:0 0 16px}
+.f{display:grid;gap:5px;margin-bottom:12px}
+.f label{font-size:13px;font-weight:600;color:var(--ink-2)}
+.f input,.f select,.f textarea{border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:#fffdf9;width:100%}
+.f textarea{min-height:64px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hint{font-size:12.5px;color:var(--ink-3)}
+.dlg-acts{display:flex;gap:8px;justify-content:space-between;margin-top:6px;flex-wrap:wrap}
+.dlg-acts .r{display:flex;gap:8px;margin-left:auto}
+
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:10}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:760px){
+  .top .title{display:none}
+  .top img{height:26px}
+  h1{font-size:25px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .card{grid-template-columns:1fr}
+  .card .acts{justify-content:flex-start}
+  .sec-head{flex-wrap:wrap}
+  .tabs{margin-left:0;width:100%}
+  thead{display:none}
+  table,tbody,tr,td{display:block;width:100%}
+  tbody tr{padding:12px 14px;border-bottom:1px solid var(--line-2)}
+  tbody tr:last-child{border-bottom:0}
+  td{border:0;padding:2px 0}
+  td[data-k]::before{content:attr(data-k) ": ";color:var(--ink-3);font-size:13px}
+  .row2{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <img src="logo.png" alt="Become Health, Direct Primary Care" width="720" height="134">
+    <span class="spacer"></span>
+    <button class="btn btn-primary" id="addBtn" type="button">+ Add person</button>
+  </div>
+</header>
+
+<div class="note" role="note">
+  <div class="wrap">
+    <span>Preview with made-up names. Anything you add or change stays in this browser only.</span>
+    <button type="button" id="resetBtn">Reset sample list</button>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <h1>Meet and greet follow-ups</h1>
+    <p class="sub">Everyone you've met who hasn't joined yet, and who to reach out to today.</p>
+
+    <section class="stats" aria-label="Summary">
+      <div class="stat"><b id="sMet">0</b><span>Meet and greets</span></div>
+      <div class="stat"><b id="sOpen">0</b><span>Still deciding</span></div>
+      <div class="stat"><b id="sJoined">0</b><span>Joined</span></div>
+      <div class="stat"><b id="sRate">0%</b><span>Joined after meeting</span></div>
+    </section>
+
+    <section aria-labelledby="dueH">
+      <div class="sec-head"><h2 id="dueH">Follow up today</h2><span class="count" id="dueCount"></span></div>
+      <div class="due" id="due"></div>
+    </section>
+
+    <section aria-labelledby="allH">
+      <div class="sec-head">
+        <h2 id="allH">Everyone</h2>
+        <div class="tabs" role="group" aria-label="Filter">
+          <button class="tab" type="button" data-f="open" aria-pressed="true">Still deciding</button>
+          <button class="tab" type="button" data-f="joined" aria-pressed="false">Joined</button>
+          <button class="tab" type="button" data-f="notnow" aria-pressed="false">Not now</button>
+          <button class="tab" type="button" data-f="all" aria-pressed="false">All</button>
+        </div>
+      </div>
+      <div class="table">
+        <table>
+          <thead><tr><th>Name</th><th>Met</th><th>Interest</th><th>Waiting on</th><th>Next follow-up</th><th>Status</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Keeps contact details and where each person stands. Health details stay in Hint.</span>
+    <span>Built for Become Health by MOSI Consulting</span>
+  </div>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlgH">
+  <form class="dlg" id="form" method="dialog">
+    <h3 id="dlgH">Add person</h3>
+    <div class="f"><label for="fName">Name</label><input id="fName" required autocomplete="off"></div>
+    <div class="row2">
+      <div class="f"><label for="fEmail">Email</label><input id="fEmail" type="email" autocomplete="off"></div>
+      <div class="f"><label for="fPhone">Phone</label><input id="fPhone" type="tel" autocomplete="off"></div>
+    </div>
+    <div class="row2">
+      <div class="f"><label for="fMet">Meet and greet date</label><input id="fMet" type="date" required></div>
+      <div class="f"><label for="fInt">Interest</label>
+        <select id="fInt"><option value="ready">Ready to join</option><option value="thinking">Thinking it over</option><option value="unsure">Not sure</option></select>
+      </div>
+    </div>
+    <div class="f"><label for="fWait">Waiting on</label><textarea id="fWait" placeholder="e.g. checking cost with spouse, open enrollment in January"></textarea>
+      <span class="hint">Keep it to what they're deciding on. Health details belong in Hint.</span></div>
+    <div class="row2">
+      <div class="f"><label for="fNext">Next follow-up</label><input id="fNext" type="date"></div>
+      <div class="f"><label for="fStatus">Status</label>
+        <select id="fStatus"><option value="open">Still deciding</option><option value="joined">Joined</option><option value="notnow">Not now</option></select>
+      </div>
+    </div>
+    <div class="dlg-acts">
+      <button class="btn btn-ghost" type="button" id="delBtn">Remove</button>
+      <div class="r">
+        <button class="btn btn-ghost" type="button" id="cancelBtn">Cancel</button>
+        <button class="btn btn-primary" type="submit" id="saveBtn">Save</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  const KEY='become-followups-v1';
+  const SIGNUP='https://become.hint.com/signup/membership/contacts';
+  const DAY=86400000;
+  const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+  const iso=d=>{const z=new Date(d);return z.getFullYear()+'-'+String(z.getMonth()+1).padStart(2,'0')+'-'+String(z.getDate()).padStart(2,'0')};
+  const off=n=>iso(new Date(today().getTime()+n*DAY));
+  const parse=s=>{if(!s)return null;const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+  const fmt=s=>{const d=parse(s);return d?d.toLocaleDateString('en-US',{month:'short',day:'numeric'}):''};
+  const daysFrom=s=>Math.round((parse(s)-today())/DAY);
+
+  function sample(){
+    return [
+      {name:'Sarah Whitlock',email:'sarah.w@example.com',phone:'(801) 555-0142',met:off(-12),interest:'thinking',wait:'Checking the monthly cost with her husband',next:off(0),status:'open',touches:1},
+      {name:'Marcus Del Rio',email:'mdelrio@example.com',phone:'(385) 555-0187',met:off(-6),interest:'ready',wait:'Wants to drop his PPO at open enrollment first',next:off(0),status:'open',touches:0},
+      {name:'Priya Natarajan',email:'priya.n@example.com',phone:'(801) 555-0119',met:off(-20),interest:'thinking',wait:'Asked about adding her 2 kids',next:off(-2),status:'open',touches:1},
+      {name:'Laura Pace',email:'laurapace@example.com',phone:'(801) 555-0163',met:off(-1),interest:'thinking',wait:'Comparing with another practice',next:off(3),status:'open',touches:0},
+      {name:'Tom Okafor',email:'tokafor@example.com',phone:'(385) 555-0130',met:off(-3),interest:'unsure',wait:'Asked what labs are included',next:off(2),status:'open',touches:0},
+      {name:'Jenna Lindqvist',email:'jenna.l@example.com',phone:'(801) 555-0178',met:off(-9),interest:'ready',wait:'Said she would sign up after the 1st',next:off(5),status:'open',touches:1},
+      {name:'Dale Brimhall',email:'dbrimhall@example.com',phone:'(801) 555-0104',met:off(-30),interest:'ready',wait:'',next:'',status:'joined',touches:2},
+      {name:'Ana Sorensen',email:'ana.s@example.com',phone:'(385) 555-0151',met:off(-25),interest:'thinking',wait:'',next:'',status:'joined',touches:1},
+      {name:'Kevin Moss',email:'kmoss@example.com',phone:'(801) 555-0195',met:off(-40),interest:'unsure',wait:'Staying with his current doctor for now',next:'',status:'notnow',touches:2}
+    ].map((p,i)=>Object.assign({id:'s'+i},p));
+  }
+  function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(v))return v}catch(e){}return sample()}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(people))}catch(e){}}
+  let people=load();
+  let filter='open';
+  let editing=null;
+
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const INT={ready:['Ready to join','p-ready'],thinking:['Thinking it over','p-thinking'],unsure:['Not sure','p-unsure']};
+  const STAT={open:['Still deciding','p-thinking'],joined:['Joined','p-joined'],notnow:['Not now','p-notnow']};
+  const pill=([t,c])=>'<span class="pill '+c+'">'+esc(t)+'</span>';
+
+  function dueLabel(p){
+    if(p.status!=='open'||!p.next)return '';
+    const d=daysFrom(p.next);
+    if(d<0)return pill([(-d)+(d===-1?' day':' days')+' overdue','p-over']);
+    if(d===0)return pill(['Today','p-today']);
+    return '<span class="num">'+fmt(p.next)+'</span>';
+  }
+  function mailto(p){
+    const first=(p.name||'').split(' ')[0];
+    const body='Hi '+first+',\n\nIt was great meeting you on '+fmt(p.met)+'. I wanted to check in and see if you had any other questions about Become Health.\n\nWhenever you\'re ready, you can sign up here:\n'+SIGNUP+'\n\nDr. Jackson';
+    return 'mailto:'+encodeURIComponent(p.email||'')+'?subject='+encodeURIComponent('Following up from our meet and greet')+'&body='+encodeURIComponent(body);
+  }
+
+  function render(){
+    const met=people.length, open=people.filter(p=>p.status==='open').length, joined=people.filter(p=>p.status==='joined').length;
+    $('sMet').textContent=met; $('sOpen').textContent=open; $('sJoined').textContent=joined;
+    $('sRate').textContent=met?Math.round(joined/met*100)+'%':'0%';
+
+    const due=people.filter(p=>p.status==='open'&&p.next&&daysFrom(p.next)<=0).sort((a,b)=>a.next<b.next?-1:1);
+    $('dueCount').textContent=due.length?due.length+(due.length===1?' person':' people'):'';
+    $('due').innerHTML=due.length?due.map(p=>
+      '<div class="card"><div>'+
+        '<div class="who"><span class="name">'+esc(p.name)+'</span>'+pill(INT[p.interest])+dueLabel(p)+'</div>'+
+        '<div class="meta">Met '+fmt(p.met)+' · '+(p.touches?p.touches+(p.touches===1?' follow-up':' follow-ups')+' so far':'No follow-up yet')+(p.phone?' · '+esc(p.phone):'')+'</div>'+
+        (p.wait?'<div class="wait"><em>Waiting on:</em> '+esc(p.wait)+'</div>':'')+
+      '</div><div class="acts">'+
+        '<a class="btn btn-gold" href="'+mailto(p)+'" data-act="mail" data-id="'+p.id+'">Email follow-up</a>'+
+        '<button class="btn btn-ghost" type="button" data-act="done" data-id="'+p.id+'">Followed up</button>'+
+        '<button class="btn btn-ghost" type="button" data-act="joined" data-id="'+p.id+'">Joined</button>'+
+      '</div></div>').join('')
+      :'<div class="empty">Nobody to follow up with today.</div>';
+
+    const list=people.filter(p=>filter==='all'||p.status===filter).sort((a,b)=>{
+      if(a.status==='open'&&b.status==='open')return (a.next||'9')<(b.next||'9')?-1:1;
+      return a.met<b.met?1:-1;});
+    $('rows').innerHTML=list.length?list.map(p=>
+      '<tr data-id="'+p.id+'" tabindex="0">'+
+        '<td><div class="n">'+esc(p.name)+'</div><div class="e">'+esc(p.email||p.phone||'')+'</div></td>'+
+        '<td data-k="Met" class="num">'+fmt(p.met)+'</td>'+
+        '<td data-k="Interest">'+pill(INT[p.interest])+'</td>'+
+        '<td data-k="Waiting on">'+(esc(p.wait)||'<span class="e">None noted</span>')+'</td>'+
+        '<td data-k="Next follow-up">'+(dueLabel(p)||'<span class="e">None</span>')+'</td>'+
+        '<td data-k="Status">'+pill(STAT[p.status])+'</td>'+
+      '</tr>').join('')
+      :'<tr><td colspan="6" class="e" style="text-align:center;padding:18px">No one here yet.</td></tr>';
+  }
+
+  let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
+  const byId=id=>people.find(p=>p.id===id);
+
+  $('due').addEventListener('click',e=>{
+    const b=e.target.closest('[data-act]');if(!b)return;
+    const p=byId(b.dataset.id);if(!p)return;
+    if(b.dataset.act==='mail'){p.touches=(p.touches||0)+1;p.next=off(7);save();setTimeout(render,300);toast('Email opened. Next follow-up set for '+fmt(p.next)+'.');return}
+    if(b.dataset.act==='done'){p.touches=(p.touches||0)+1;p.next=off(7);toast('Next follow-up set for '+fmt(p.next)+'.')}
+    if(b.dataset.act==='joined'){p.status='joined';p.next='';toast(p.name.split(' ')[0]+' marked as joined.')}
+    save();render();
+  });
+
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+    filter=t.dataset.f;document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-pressed',x===t?'true':'false'));render();
+  }));
+
+  function open(p){
+    editing=p||null;
+    $('dlgH').textContent=p?'Edit '+p.name:'Add person';
+    $('fName').value=p?p.name:''; $('fEmail').value=p?p.email:''; $('fPhone').value=p?p.phone:'';
+    $('fMet').value=p?p.met:off(0); $('fInt').value=p?p.interest:'thinking'; $('fWait').value=p?p.wait:'';
+    $('fNext').value=p?p.next:off(3); $('fStatus').value=p?p.status:'open';
+    $('delBtn').style.visibility=p?'visible':'hidden';
+    $('dlg').showModal(); $('fName').focus();
+  }
+  $('addBtn').addEventListener('click',()=>open());
+  $('rows').addEventListener('click',e=>{const tr=e.target.closest('tr[data-id]');if(tr)open(byId(tr.dataset.id))});
+  $('rows').addEventListener('keydown',e=>{if(e.key==='Enter'){const tr=e.target.closest('tr[data-id]');if(tr)open(byId(tr.dataset.id))}});
+  $('cancelBtn').addEventListener('click',()=>$('dlg').close());
+  $('delBtn').addEventListener('click',()=>{if(editing&&confirm('Remove '+editing.name+' from the list?')){people=people.filter(p=>p!==editing);save();render();$('dlg').close();toast('Removed.')}});
+  $('form').addEventListener('submit',e=>{
+    e.preventDefault();
+    const v={name:$('fName').value.trim(),email:$('fEmail').value.trim(),phone:$('fPhone').value.trim(),met:$('fMet').value,interest:$('fInt').value,wait:$('fWait').value.trim(),next:$('fStatus').value==='open'?$('fNext').value:'',status:$('fStatus').value};
+    if(!v.name)return;
+    if(editing)Object.assign(editing,v);else people.push(Object.assign({id:'p'+Date.now(),touches:0},v));
+    save();render();$('dlg').close();toast(editing?'Saved.':v.name.split(' ')[0]+' added.');
+  });
+  $('resetBtn').addEventListener('click',()=>{people=sample();save();render();toast('Sample list restored.')});
+
+  render();
+})();
+</script>
+</body>
+</html>
